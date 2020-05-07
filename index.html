@@ -8,6 +8,86 @@
     <link rel="stylesheet" href="styles.css"></style>
 </head>
 <body>
-    
+    <main class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <div class="row" id="header">
+                <div class="col-sm" id="highscores">
+                    <a href="#">View Highscores</a>
+                </div>
+                <div class="col-sm" id="score">
+                    Score: 0
+                </div>
+            </div>
+            <div class="row2" id="main-content">
+                <h2 class="display-12" id="question"></h2>
+
+                <div class="btn-group-vertical">
+                    <p class="lead" id="answer"></p>
+                    <button type="button" class="btn btn-primary btn-sm" id="button"></button>
+
+                </div>
+
+                <div id="answer">
+
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        var correct = false;
+        var score = 0;
+        var timer = 0;
+        var question = 0;
+
+        function showAnswer() {
+            var timeLeft = 1;
+            var answerEl = document.getElementById("answer");
+
+            var timeInterval = setInterval(function() {
+                if (timeleft === 1)
+                {
+                    if (correct)
+                        answerEl.innerHTML = "<hr>" + "Correct!";
+                    else
+                        answerEl.innerHTML = "<hr>" + "Wrong!";
+                }
+
+                if (timeLeft === 0) 
+                {
+                    timerEl.innerHTML = "";
+                    clearInterval(timeInterval);
+                }
+
+                timeLeft--;
+        
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            
+        }
+
+        function submitResults() {
+
+        }
+
+        function showScore() {
+
+        }
+
+        function showIntro() {
+            document.getElementById("question").textContent = "Coding Quiz Challenge";
+            document.getElementById("answer").textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by 10 seconds!";
+            document.getElementById("button").textContent = "Start Quiz";
+        }
+
+        // First, show intro.
+        showIntro();
+
+        // Button clicked to begin quiz. Start the timer and get the next question.
+        document.getElementById("button").addEventListener("click", nextQuestion);
+
+
+    </script>
 </body>
 </html>
