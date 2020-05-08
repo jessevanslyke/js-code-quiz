@@ -21,6 +21,15 @@ h2 {
     color: white;
 }
 
+#option1, #option2, #option3, #option4 {
+    margin: auto 0; 
+    padding: 10px;
+    background-color: indigo;
+    text-align: left;
+    margin: 10px;
+    color: white;
+}
+
 #main-content {
     margin: auto;
     width: 50%;
@@ -41,4 +50,10 @@ h2 {
 
 #button {
     text-align: center;
+}
+
+#highscores {
+    background: none!important;
+    border: none;
+    padding: 0!important;
 }

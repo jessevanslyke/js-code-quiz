@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row" id="header">
                 <div class="col-sm">
-                    <a href="#" id="highscores">View Highscores</a>
+                    <button id="highscores">View Highscores</button>
                 </div>
                 <div class="col-sm">
                     <p id="score">Score: 0</p>
@@ -21,7 +21,7 @@
             <div class="row2" id="main-content">
                 <h2 class="display-12" id="question"></h2>
 
-                <div class="btn-group-vertical">
+                <div class="btn-group-vertical" id="btnGroup">
                     <p class="lead" id="intro"></p>
                     <button type="button" class="btn btn-primary btn-sm" id="button"></button>
 
@@ -47,52 +47,110 @@
         "String values must be enclosed within ________ when being assigned to variables.", 
         "A very useful tool used during development and debugging for printing content to the debugger is:"];
 
-        function showAnswer() {
+        function showAnswer(choice) {
             var timeLeft = 1;
             var answerEl = document.getElementById("answer");
 
-            answerInterval = setInterval(function() {
-                if (timeleft === 1)
-                {
-                    if (correct)
-                        answerEl.innerHTML = "<hr>" + "Correct!";
-                    else
-                        answerEl.innerHTML = "<hr>" + "Wrong!";
-                }
+            if ( (questionIndex === 0 && choice === 3)
+            || (questionIndex === 1 && choice === 2)
+            || (questionIndex === 2 && choice === 4)
+            || (questionIndex === 3 && choice === 3)
+            || (questionIndex === 4 && choice === 4) )
+            {
+                correct = true;
+            }
 
-                if (timeLeft === 0) 
-                {
-                    timerEl.innerHTML = "";
-                    clearInterval(answerInterval);
-                }
-                else
-                    timeLeft--;
-        
-            }, 1000);
+            // Only set the timer if it's undefined
+            if (answerInterval === undefined)
+            {
+                answerInterval = setInterval(function() {
+                    if (timeLeft === 1)
+                    {
+                        if (correct)
+                            answerEl.innerHTML = "<hr>" + "Correct!";
+                        else
+                            answerEl.innerHTML = "<hr>" + "Wrong!";
+                    }
+
+                    if (timeLeft === 0) 
+                    {
+                        answerEl.innerHTML = "";
+                        clearInterval(answerInterval);
+                    }
+                    else
+                        timeLeft--;
+            
+                }, 1000);
+            }
+
+            correct = false;
+            nextQuestion();
         }
 
         function startQuiz() {
-            // Make this "76" because it immediately drops by 1 jumping into the interval function.
-            score = 76;
-            quizzing = true;
 
-            quizInterval = setInterval(function() {
-                score--;
+            if (quizInterval === undefined)
+            {
+                // Make this "76" because it immediately drops by 1 jumping into the interval function.
+                score = 76;
+                quizzing = true;
 
-                if (score === 0) 
-                {
-                    clearInterval(quizInterval);
-                    submitResults();    
-                }
-        
-            }, 1000);
+                quizInterval = setInterval(function() {
+                    score--;
+                    document.getElementById("score").textContent = "Time: " + score;
+
+                    if (score === 0) 
+                    {
+                        clearInterval(quizInterval);
+                        submitResults();    
+                    }
+            
+                }, 1000);
+            }
+
+            nextQuestion();
         }
 
         function nextQuestion() {
+
+            var btnGroupEl = document.getElementById("btnGroup");
+
             if (questionIndex === undefined)
             {
+                
+                var buttonEl = document.getElementById("button");
+
+                //Clear everything out and start from nothing
                 questionIndex = 0;
-                startQuiz();
+                document.getElementById("intro").textContent = "";
+                document.getElementById("answer").textContent = "";
+                btnGroupEl.removeChild(buttonEl);
+
+                // Create 4 new option buttons
+                var option1El = document.createElement("button");
+                option1El.setAttribute("type", "button");
+                option1El.setAttribute("class", "btn btn-primary btn-sm");
+                option1El.setAttribute("id", "option1");
+                option1El.addEventListener("click", () => showAnswer(1));
+                btnGroupEl.appendChild(option1El);
+                var option2El = document.createElement("button");
+                option2El.setAttribute("type", "button");
+                option2El.setAttribute("class", "btn btn-primary btn-sm");
+                option2El.setAttribute("id", "option2");
+                option2El.addEventListener("click", () => showAnswer(2));
+                btnGroupEl.appendChild(option2El);
+                var option3El = document.createElement("button");
+                option3El.setAttribute("type", "button");
+                option3El.setAttribute("class", "btn btn-primary btn-sm");
+                option3El.setAttribute("id", "option3");
+                option3El.addEventListener("click", () => showAnswer(3));
+                btnGroupEl.appendChild(option3El);
+                var option4El = document.createElement("button");
+                option4El.setAttribute("type", "button");
+                option4El.setAttribute("class", "btn btn-primary btn-sm");
+                option4El.setAttribute("id", "option4");
+                option4El.addEventListener("click", () => showAnswer(4));
+                btnGroupEl.appendChild(option4El);
             }
             else
                 questionIndex++;
@@ -103,28 +161,78 @@
                 return;
             }
 
-            document.getElementById("intro").textContent = "";
-
+            // Setup the new question
             document.getElementById("question").textContent = questionQueue[questionIndex];
-            var option1, option2, option3, option4;
-            if (questionQueue === 0)
+
+            // Setup the new options
+            if (questionIndex === 0)
             {
-                option1 = "1. strings";
+                document.getElementById("option1").textContent = "1. strings";
+                document.getElementById("option2").textContent = "2. booleans";
+                document.getElementById("option3").textContent = "3. alerts";
+                document.getElementById("option4").textContent = "4. numbers";
             }
-            document.getElementById("answer").textContent = ""
-            
+
+            if (questionIndex === 1)
+            {
+                document.getElementById("option1").textContent = "1. quotes";
+                document.getElementById("option2").textContent = "2. curly brackets";
+                document.getElementById("option3").textContent = "3. parentheses";
+                document.getElementById("option4").textContent = "4. square brackets";
+            }
+
+            if (questionIndex === 2)
+            {
+                document.getElementById("option1").textContent = "1. numbers and strings";
+                document.getElementById("option2").textContent = "2. other arrays";
+                document.getElementById("option3").textContent = "3. booleans";
+                document.getElementById("option4").textContent = "4. all of the above";
+            }
+
+            if (questionIndex === 3)
+            {
+                document.getElementById("option1").textContent = "1. commas";
+                document.getElementById("option2").textContent = "2. curly brackets";
+                document.getElementById("option3").textContent = "3. quotes";
+                document.getElementById("option4").textContent = "4. parentheses";
+            }
+            if (questionIndex === 4)
+            {
+                document.getElementById("option1").textContent = "1. JavaScript";
+                document.getElementById("option2").textContent = "2. terminal / bash";
+                document.getElementById("option3").textContent = "3. for loops";
+                document.getElementById("option4").textContent = "4. console.log";
+            }
         }
 
         function submitResults() {
+            var btnGroupEl = document.getElementById("btnGroup");
+            var option1El = document.getElementById("option1");
+            var option2El = document.getElementById("option2");
+            var option3El = document.getElementById("option3");
+            var option4El = document.getElementById("option4");
+            var inputEl = document.createElement("input");
+            var submitScoreEl = document.createElement("button");
+
             clearInterval(quizInterval);
             document.getElementById("question").textContent = "All done!";
             document.getElementById("intro").textContent = "Your final score: " + score;
+
+            //Remove the 4 option buttons
+            btnGroupEl.removeChild(option1El);
+            btnGroupEl.removeChild(option2El);
+            btnGroupEl.removeChild(option3El);
+            btnGroupEl.removeChild(option4El);
+
+            //inputEl.setAttribute
+            btnGroupEl.appendChild(inputEl);
+            btnGroupEl.appendChild(submitScoreEl);
         }
 
         function showScore() {
             if (quizzing)
             {
-                document.getElementById("answer").innerHTML = "<hr>" + "Finish your quiz first!";
+                document.getElementById("answer").innerHTML = "<hr>Finish your quiz first!";
                 return;
             }
 
@@ -134,6 +242,13 @@
         function showIntro() {
             document.getElementById("question").textContent = "Coding Quiz Challenge";
             document.getElementById("intro").textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by 10 seconds!";
+
+            // Create the start quiz button
+            var btnGroupEl = document.getElementById("btnGroup");
+            var startQuizEl = document.createElement("button");
+            startQuizEl.setAttribute("type", "button");
+            startQuizEl.setAttribute("class", "btn btn-primary btn-sm");
+            startQuizEl.setAttribute("id", "button");
             document.getElementById("button").textContent = "Start Quiz";
         }
 
@@ -141,9 +256,9 @@
         showIntro();
 
         // Button clicked to begin quiz. Start the timer and get the next question.
-        document.getElementById("button").addEventListener("click", nextQuestion);
-        document.getElementById("option1").addEventListener("click", showAnswer);
-        document.getElementById("option2").addEventListener("click", showAnswer)
+        document.getElementById("button").addEventListener("click", startQuiz);
+        
+        document.getElementById("highscores").addEventListener("click", showScore);
 
 
     </script>
