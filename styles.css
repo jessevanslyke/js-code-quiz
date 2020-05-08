@@ -56,3 +56,9 @@ h2 {
     border: none;
     padding: 0!important;
 }
+
+input {
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid;
+}
