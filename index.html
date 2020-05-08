@@ -37,7 +37,7 @@
         var correct = false;
         var quizzing = false;
         var score = 0;
-        var timer = 0;
+        var timeLeft = 0;
         var questionIndex;
         var quizInterval;
         var answerInterval;
@@ -48,8 +48,7 @@
         "A very useful tool used during development and debugging for printing content to the debugger is:"];
 
         function showAnswer(choice) {
-            var timeLeft = 1;
-            var answerEl = document.getElementById("answer");
+            timeLeft = 1;
 
             if ( (questionIndex === 0 && choice === 3)
             || (questionIndex === 1 && choice === 2)
@@ -59,32 +58,40 @@
             {
                 correct = true;
             }
+            else
+                score -= 10;
 
-            // Only set the timer if it's undefined
+            // Only set the timeLeft if it's undefined
             if (answerInterval === undefined)
             {
-                answerInterval = setInterval(function() {
-                    if (timeLeft === 1)
-                    {
-                        if (correct)
-                            answerEl.innerHTML = "<hr>" + "Correct!";
-                        else
-                            answerEl.innerHTML = "<hr>" + "Wrong!";
-                    }
-
-                    if (timeLeft === 0) 
-                    {
-                        answerEl.innerHTML = "";
-                        clearInterval(answerInterval);
-                    }
-                    else
-                        timeLeft--;
-            
-                }, 1000);
+                //Define the interval, then immediately call it
+                answerInterval = setInterval(showOrHide, 1000);
+                showOrHide();
             }
 
             correct = false;
             nextQuestion();
+        }
+
+        function showOrHide() {
+            var answerEl = document.getElementById("answer");
+
+            if (timeLeft === 1)
+            {
+                if (correct)
+                    answerEl.innerHTML = "<hr>" + "Correct!";
+                else
+                    answerEl.innerHTML = "<hr>" + "Wrong!";
+            }
+
+            if (timeLeft === 0) 
+            {
+                answerEl.innerHTML = "";
+                clearInterval(answerInterval);
+                answerInterval = undefined;
+            }
+            else
+                timeLeft--;
         }
 
         function startQuiz() {
@@ -255,7 +262,7 @@
         // First, show intro.
         showIntro();
 
-        // Button clicked to begin quiz. Start the timer and get the next question.
+        // Button clicked to begin quiz. Start the timeLeft and get the next question.
         document.getElementById("button").addEventListener("click", startQuiz);
         
         document.getElementById("highscores").addEventListener("click", showScore);
